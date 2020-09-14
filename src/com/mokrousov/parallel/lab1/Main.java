@@ -43,6 +43,7 @@ public class Main {
     
     for (int size : sizes) {
       List<Long> times = new ArrayList<>();
+      long serialTime = 0;
       for (int threadNum : threadNums) {
         double[] vec = getVec(size);
         double result;
@@ -53,6 +54,7 @@ public class Main {
         long startTime = System.currentTimeMillis();
         result = runSerial(vec);
         long runTime = System.currentTimeMillis() - startTime;
+        serialTime = runTime;
         System.out.println(String.format("Serial run: %.4f, time: %dms.", result, runTime));
       
         startTime = System.currentTimeMillis();
@@ -66,9 +68,10 @@ public class Main {
       System.out.println("*******");
       System.out.println("Speedup coefficients for size: " + size);
       
-      for (int i = 1; i < threadNums.length; i++) {
-        double coef = times.get(i - 1) / (double) times.get(i);
-        System.out.println(String.format("Speedup coefficient from %d to %d threads: %f", threadNums[i - 1], threadNums[i], coef));
+      for (int i = 0; i < threadNums.length; i++) {
+        double coef = serialTime / (double) times.get(i);
+        System.out.println(String.format("Speedup coefficient for %d threads: %f", threadNums[i], coef));
+        System.out.println(String.format("Efficiency coefficient for %d threads: %f", threadNums[i], coef / threadNums[i]));
       }
       
       System.out.println();
