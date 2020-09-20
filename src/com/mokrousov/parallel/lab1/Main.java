@@ -39,7 +39,7 @@ public class Main {
     int[] sizes = { 100000, 1000000, 10000000, 100000000 };
     int[] threadNums = { 2, 4, 6, 8, 16 };
     
-    System.out.println("Variant #22");
+    System.out.println("Variant #5");
     
     for (int size : sizes) {
       List<Long> times = new ArrayList<>();
