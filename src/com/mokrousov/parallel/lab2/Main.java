@@ -1,46 +1,47 @@
 package com.mokrousov.parallel.lab2;
 
+import com.mokrousov.parallel.lab2.model.cpu.CPUPrimary;
+import com.mokrousov.parallel.lab2.model.cpu.CPUSecondary;
+import com.mokrousov.parallel.lab2.model.process.CPUProcess;
+import com.mokrousov.parallel.lab2.model.queue.CPUQueue;
+
 public class Main {
+  private static final int PROCESS_NUM = 10;
+  private static final int LOWER_WAIT_LIMIT = 100;
+  private static final int UPPER_WAIT_LIMIT = 4000;
+  private static final int LOWER_PROCESS_TIME_LIMIT = 2000;
+  private static final int UPPER_PROCESS_TIME_LIMIT = 5000;
+  
   public static void runSimulation(int processNum) {
-    CPUQueue q1 = new CPUQueue(processNum), q2 = new CPUQueue(processNum);
-    CPU cpu1 = new CPU(), cpu2 = new CPU();
-    int maxQueue1 = 0, maxQueue2 = 0, numInterrupted = 0;
-    int t = 0;
+    CPUQueue queue1 = new CPUQueue(), queue2 = new CPUQueue();
     
-    for (; !q1.isFinished() || !q2.isFinished(); t++) {
-      q1.update(t);
-      q2.update(t);
-      
-      cpu1.run();
-      cpu2.run();
+    CPUProcess cpuProcess1 = new CPUProcess(queue1, PROCESS_NUM, LOWER_PROCESS_TIME_LIMIT, UPPER_PROCESS_TIME_LIMIT, LOWER_WAIT_LIMIT, UPPER_WAIT_LIMIT);
+    CPUProcess cpuProcess2 = new CPUProcess(queue2, PROCESS_NUM, LOWER_PROCESS_TIME_LIMIT, UPPER_PROCESS_TIME_LIMIT, LOWER_WAIT_LIMIT, UPPER_WAIT_LIMIT);
+  
+    CPUPrimary   cpu1 = new CPUPrimary(queue1, queue2);
+    CPUSecondary cpu2 = new CPUSecondary(queue2);
     
-      maxQueue1 = Math.max(maxQueue1, q1.size());
-      maxQueue2 = Math.max(maxQueue2, q2.size());
+    cpu1.start();
+    cpu2.start();
     
-      if (cpu1.isBusy()) {
-        if (cpu1.isBusySecondary() && !q1.isEmpty()) {
-          numInterrupted++;
-          q2.addFirst(cpu1.getProcess());
-          cpu1.setProcess(q1.poll(), false);
-        }
-      } else if (!q1.isEmpty()) {
-        cpu1.setProcess(q1.poll(), false);
-      } else if (!q2.isEmpty()) {
-        cpu1.setProcess(q2.poll(), true);
-      }
-      
-      if (!cpu2.isBusy() && !q2.isEmpty()) {
-        cpu2.setProcess(q2.poll(), false);
+    cpuProcess1.start();
+    cpuProcess2.start();
+    
+    while (true) {
+      if (!cpuProcess1.isAlive() && !cpuProcess2.isAlive()) {
+        cpu1.interrupt();
+        cpu2.interrupt();
+        break;
       }
     }
-    
+  
     System.out.println("Total number of processes (per each CPU): " + processNum);
-    System.out.println("Max size, queue 1: " + maxQueue1 + ", queue 2: " + maxQueue2);
-    System.out.println("Number of processes interrupted: " + numInterrupted);
+    System.out.println("Max size, queue 1: " + queue1.maxSize() + ", queue 2: " + queue2.maxSize());
+    System.out.println("Number of processes interrupted: " + cpu1.numOfInterruptedProcesses());
   }
   
   public static void main(String[] args) {
-    int[] processNums = { 100, 1000, 10000, 100000 };
+    int[] processNums = { 5, 10, 25 };
     for (int processNum : processNums) {
       runSimulation(processNum);
     }
