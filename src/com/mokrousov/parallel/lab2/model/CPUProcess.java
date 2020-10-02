@@ -1,6 +1,4 @@
-package com.mokrousov.parallel.lab2.model.process;
-
-import com.mokrousov.parallel.lab2.model.queue.CPUQueue;
+package com.mokrousov.parallel.lab2.model;
 
 public class CPUProcess extends Thread {
   private final CPUQueue queue;

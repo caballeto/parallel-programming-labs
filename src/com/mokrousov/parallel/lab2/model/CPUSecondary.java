@@ -1,7 +1,4 @@
-package com.mokrousov.parallel.lab2.model.cpu;
-
-import com.mokrousov.parallel.lab2.model.process.Task;
-import com.mokrousov.parallel.lab2.model.queue.CPUQueue;
+package com.mokrousov.parallel.lab2.model;
 
 public class CPUSecondary extends Thread {
   private final CPUQueue queue;

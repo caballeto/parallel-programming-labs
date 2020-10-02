@@ -1,9 +1,9 @@
 package com.mokrousov.parallel.lab2;
 
-import com.mokrousov.parallel.lab2.model.cpu.CPUPrimary;
-import com.mokrousov.parallel.lab2.model.cpu.CPUSecondary;
-import com.mokrousov.parallel.lab2.model.process.CPUProcess;
-import com.mokrousov.parallel.lab2.model.queue.CPUQueue;
+import com.mokrousov.parallel.lab2.model.CPUPrimary;
+import com.mokrousov.parallel.lab2.model.CPUSecondary;
+import com.mokrousov.parallel.lab2.model.CPUProcess;
+import com.mokrousov.parallel.lab2.model.CPUQueue;
 
 public class Main {
   private static final int PROCESS_NUM = 10;
@@ -15,8 +15,8 @@ public class Main {
   public static void runSimulation(int processNum) {
     CPUQueue queue1 = new CPUQueue(), queue2 = new CPUQueue();
     
-    CPUProcess cpuProcess1 = new CPUProcess(queue1, PROCESS_NUM, LOWER_PROCESS_TIME_LIMIT, UPPER_PROCESS_TIME_LIMIT, LOWER_WAIT_LIMIT, UPPER_WAIT_LIMIT);
-    CPUProcess cpuProcess2 = new CPUProcess(queue2, PROCESS_NUM, LOWER_PROCESS_TIME_LIMIT, UPPER_PROCESS_TIME_LIMIT, LOWER_WAIT_LIMIT, UPPER_WAIT_LIMIT);
+    CPUProcess cpuProcess1 = new CPUProcess(queue1, processNum, LOWER_PROCESS_TIME_LIMIT, UPPER_PROCESS_TIME_LIMIT, LOWER_WAIT_LIMIT, UPPER_WAIT_LIMIT);
+    CPUProcess cpuProcess2 = new CPUProcess(queue2, processNum, LOWER_PROCESS_TIME_LIMIT, UPPER_PROCESS_TIME_LIMIT, LOWER_WAIT_LIMIT, UPPER_WAIT_LIMIT);
   
     CPUPrimary   cpu1 = new CPUPrimary(queue1, queue2);
     CPUSecondary cpu2 = new CPUSecondary(queue2);
@@ -41,7 +41,7 @@ public class Main {
   }
   
   public static void main(String[] args) {
-    int[] processNums = { 5, 10, 25 };
+    int[] processNums = { 5, 10, 15 };
     for (int processNum : processNums) {
       runSimulation(processNum);
     }

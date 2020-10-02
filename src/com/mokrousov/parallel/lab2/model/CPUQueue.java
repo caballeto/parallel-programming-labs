@@ -1,6 +1,4 @@
-package com.mokrousov.parallel.lab2.model.queue;
-
-import com.mokrousov.parallel.lab2.model.process.Task;
+package com.mokrousov.parallel.lab2.model;
 
 import java.util.Deque;
 import java.util.LinkedList;

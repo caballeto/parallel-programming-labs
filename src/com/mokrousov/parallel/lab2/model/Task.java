@@ -1,4 +1,4 @@
-package com.mokrousov.parallel.lab2.model.process;
+package com.mokrousov.parallel.lab2.model;
 
 public class Task {
   private int time;
